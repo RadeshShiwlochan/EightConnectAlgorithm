@@ -12,7 +12,10 @@ public class Main {
 			   //outputFile2 = args[2],
 			   //outputFile3 = args[3];
 		EightConAlg eightConAlg = new EightConAlg(inputFile);
-		eightConAlg.printFunc();
+		eightConAlg.zeroFramed();
+		eightConAlg.loadImage(inputFile);
+		eightConAlg.EightConCC_Pass1();
+		//eightConAlg.printFunc();
 			
 		
 		} catch(Exception exc) {
