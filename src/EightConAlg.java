@@ -26,6 +26,7 @@ public class EightConAlg {
 					      EQArySize = (numRows * numCols)/2;
 			zeroFramedAry = new int[rowSize][colSize];
 			NeighborAry = new int[5];
+			//class notes says EQAry should be (numRows * numCols)/4
 			EQAry = new int[EQArySize];
 			for(int rowIndex = 0; rowIndex < EQArySize; ++rowIndex )
 				EQAry[rowIndex] = rowIndex;
@@ -98,10 +99,11 @@ public class EightConAlg {
 						System.out.println("===>" + nghbrLabel);
 					}
 					else if(currentCase == 3) {
-						//get the min num of Neighbor array
-						//set the ZeroFramedAry neighbors to the min
-						System.out.print(getMinInNghbrArr() + "\n");
+						int minNghbr = getMinInNghbrArr();
+						zeroFramedAry[rowVal][colVal] = minNghbr;
+						System.out.print(minNghbr + "\n");
 						System.out.println("=====================");
+						updateEQAry(minNghbr);
 					}
 				}
 			}
@@ -194,6 +196,9 @@ public class EightConAlg {
 		return min;
 	}
 	
+	public void updateEQAry(int minNum) {
+		EQAry[newLabel] = minNum;
+	}
 	public void setNghbrsToMinNum(int rowIndex, int colIndex) {
 		int min = getMinInNghbrArr();
 		zeroFramedAry[rowIndex - 1][colIndex - 1] = min;
@@ -204,12 +209,19 @@ public class EightConAlg {
 		
 	}
 	
-	public void printFunc() {
-		for (int i = 0; i < numRows + 2; ++i) {
-			for(int j = 0; j < numCols + 2; ++j){
-				System.out.print(zeroFramedAry[i][j] + " ");
+	public void printFunc(String outputFile) {
+		try {
+			PrintWriter printToFile = new PrintWriter(new File(outputFile));
+			for (int i = 0; i < numRows + 2; ++i) {
+				for(int j = 0; j < numCols + 2; ++j){
+					printToFile.print(zeroFramedAry[i][j] + " ");
+				}
+				printToFile.println();
 			}
-			System.out.println();
+			printToFile.flush();
+			printToFile.close();
+		} catch(IOException exc) {
+			System.out.println(exc);
 		}
 	}
 
