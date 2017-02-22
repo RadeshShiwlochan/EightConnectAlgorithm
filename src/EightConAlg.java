@@ -74,37 +74,57 @@ public class EightConAlg {
 			for(int colVal = 1; colVal <= numCols; ++colVal) {
 				pixel_val = zeroFramedAry[rowVal][colVal];
 				if(pixel_val > 0) {
-					int nghbrA = zeroFramedAry[rowVal - 1][colVal - 1];
-					int nghbrB = zeroFramedAry[rowVal - 1][colVal];
-					int nghbrC = zeroFramedAry[rowVal - 1][colVal + 1];
-					int nghbrD = zeroFramedAry[rowVal][colVal - 1];
-					int currentCase = getCase(nghbrA, nghbrB,
-										nghbrC, nghbrD);
-					System.out.print(nghbrA + " " + nghbrB + " " + nghbrC + " " + "\n");
-					System.out.print(nghbrD + " " + zeroFramedAry[rowVal][colVal] + "\n");
+					int index = 0;
+					NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal - 1];
+					int a = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal];
+					int b = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal + 1];
+					int c = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal][colVal - 1];
+					int d = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal][colVal];
+					int e = NeighborAry[index++];
+					
+					int currentCase = getCase(a,b,c,d,e);
 					System.out.println("Case # " + currentCase);
 					if(currentCase == 1) {
 						newLabel++;
 						zeroFramedAry[rowVal][colVal] = newLabel;
 					}
 					else if(currentCase == 2) {
-						zeroFramedAry[rowVal][colVal] = newLabel;
+						int nghbrLabel = getLabel(a,b,c,d);
+						zeroFramedAry[rowVal][colVal] = nghbrLabel;
+						System.out.println("===>" + nghbrLabel);
 					}
-					else if(currentCase == 3) {}
+					else if(currentCase == 3) {
+						//get the min num of Neighbor array
+						//set the ZeroFramedAry neighbors to the min
+						System.out.print(getMinInNghbrArr() + "\n");
+						System.out.println("=====================");
 					}
+				}
 			}
 		}
 	}
 	
 	public void EightConCC_Pass2() {
-		for(int rowVal = 1; rowVal <= numRows; ++rowVal) {
-			for(int colVal = 1; colVal <= numCols; ++colVal) {
-				int neighborA = zeroFramedAry[rowVal - 1][colVal - 1];
-				int neighborB = zeroFramedAry[rowVal - 1][colVal];
-				int neighborC = zeroFramedAry[rowVal - 1][colVal + 1];
-				int neighborD = zeroFramedAry[rowVal][colVal - 1];
-				int currentCase = getCase(neighborA, neighborB,
-									neighborC, neighborD);
+		
+		for(int rowVal = numRows - 1; rowVal >=1; --rowVal) {
+			for(int colVal = numCols - 1; colVal >= 1; --colVal) {
+				int index = 0;
+				NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal - 1];
+				int a = NeighborAry[index++];
+				NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal];
+				int b = NeighborAry[index++];
+				NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal + 1];
+				int c = NeighborAry[index++];
+				NeighborAry[index] = zeroFramedAry[rowVal][colVal - 1];
+				int d = NeighborAry[index++];
+				NeighborAry[index] = zeroFramedAry[rowVal][colVal];
+				int e = NeighborAry[index++];
+			
+				int currentCase = getCase(a,b,c,d,e);
 				if(currentCase == 1)
 					newLabel++;
 				else if(currentCase == 2) {}
@@ -113,56 +133,75 @@ public class EightConAlg {
 		}	
 	}
 	
-	public int getCase(int a, int b, int c, int d) {
+	public int getCase(int a, int b, int c, int d, int e) {
+		
+		System.out.print(a + " " + b + " " + c + " " + "\n");
+		System.out.print(d + " " + e + "\n");
 	
 		if(a == 0 && b == 0 && c == 0 && d == 0)
 			return 1;
-		 else if(a == b && b == c && c == d )	 
-			return 2;
-		 else if(a > 0 && b > 0 && c > 0 && d > 0) {
-			 if(a == b && a == c && a == d )
-				 return 2;
-			 else if(a == b && a == c || b == c && b == d )
-				 return 3;
-		 }
-		 else if(a == 0 && b > 0 && c > 0 && d > 0) {
-			 if (b == c && c == d)
-				 return 2;
+		 
+		 else if(a > 0 && b > 0 && c > 0 && d > 0 &&
+				 a == b && b == c && c == d          ||
+				 a > 0 && b > 0 && c > 0 && d == 0 && 
+			     a == b && b == c                    ||
+			     a > 0 && b > 0 && c == 0 && d > 0 && 
+			     a == b && b == d                    ||
+			     a > 0 && b == 0 && c > 0 && d > 0 &&
+			     a == c && c == d                    ||
+			     a == 0 && b > 0 && c > 0 && d > 0 &&
+			     b == c && c == d                    ||
+			     a > 0 && b > 0 && c == 0 && d == 0 &&
+			     a == b                              ||
+			     a > 0 && b == 0 && c > 0 && d == 0 &&
+			     a == c                              ||
+			     a > 0 && b == 0 && c == 0 && d > 0 &&
+			     a == d                              ||
+			     a == 0 && b > 0 && c == 0 && d > 0 &&
+			     b == d                              ||
+			     a == 0 && b == 0 && c > 0 && d > 0 &&
+			     c == d                              ||
+			     a == 0 && b > 0 && c > 0 && d == 0 &&
+			     b == c                              ||
+			     a > 0 && b == 0 && c == 0 && d == 0 ||
+			     a == 0 && b > 0 && c == 0 && d == 0 ||
+			     a == 0 && b == 0 && c > 0 && d == 0 ||
+			     a == 0 && b == 0 && c == 0 && d > 0   ) 
+			 return 2;	 
+		 else
 			 return 3;
-		 } else if(b == 0 && a > 0 && c > 0 && d > 0) {
-			 if( a == c && c == d) 
-				 return 2;
-			 return 3;
-		 } else if(c == 0 && a > 0 && b > 0 && d > 0) {
-			 if( a == b && b == d)
-				 return 2;
-			 return 3;
-		 } else if(d == 0 && a > 0 && b > 0 && c > 0) {
-			 if(a == b && b == c)
-				 return 2;
-			 return 3;
-		 } else if (a == 0 && b == 0 && c > 0 && d > 0) {
-			 if(c == d)
-				 return 2;
-			 return 3;
-		 } else if(a == 0 && c == 0 && b > 0 && d > 0) {
-			 if(b == d)
-				 return 2;
-			 return 3;
-		 } else if(b == 0 && c == 0 && a > 0 && d > 0) {
-			 if(b == c)
-				 return 2;
-			 return 3;
-		 } else if(b == 0 && d == 0 && a > 0 && c > 0) {
-			 if(a == c)
-				 return 2;
-			 return 3;
-		 } else if(a == 0 && d == 0 && b > 0 && c > 0) {
-			 if(b == c)
-				 return 2;
-			 return 3;
-		 }
-		return 2;
+	}
+	
+	public int getLabel(int a, int b, int c, int d) {
+		if(a > 0)
+			return a;
+		if(b > 0)
+			return b;
+		if(c > 0)
+			return c;
+		else 
+			return d;
+	}
+	
+	public int getMinInNghbrArr() {
+		int min = 9999;
+		for(int i = 0; i < 4;++i ) {
+			if(NeighborAry[i] == 0)
+				continue;
+			else if(NeighborAry[i] < min)
+				min = NeighborAry[i];
+		}
+		return min;
+	}
+	
+	public void setNghbrsToMinNum(int rowIndex, int colIndex) {
+		int min = getMinInNghbrArr();
+		zeroFramedAry[rowIndex - 1][colIndex - 1] = min;
+		zeroFramedAry[rowIndex - 1][colIndex]     = min;
+		zeroFramedAry[rowIndex - 1][colIndex + 1] = min;
+		zeroFramedAry[rowIndex][colIndex - 1]     = min;
+		//zeroFramedAry[rowIndex][colIndex] = min;
+		
 	}
 	
 	public void printFunc() {
