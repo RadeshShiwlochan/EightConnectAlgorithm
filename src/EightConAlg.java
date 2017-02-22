@@ -108,8 +108,8 @@ public class EightConAlg {
 	
 	public void EightConCC_Pass2() {
 		int pixel_val = -1;
-		for(int rowVal = numRows - 1; rowVal >=1; --rowVal) {
-			for(int colVal = numCols - 1; colVal >= 1; --colVal) {
+		for(int rowVal = numRows - 2; rowVal > 1; --rowVal) {
+			for(int colVal = numCols - 2; colVal > 1; --colVal) {
 				pixel_val = zeroFramedAry[rowVal][colVal];
 				if(pixel_val > 0) {
 					int index = 0;
@@ -147,6 +147,16 @@ public class EightConAlg {
 				}
 			}
 		}	
+	}
+	
+	public void EightCon_CCPass3() {
+		for(int i = 1; i <= numRows + 1; i++) {
+			for(int j = 1; j <= numCols + 1; j++) {
+				if(zeroFramedAry[i][j] > 0) {
+					zeroFramedAry[i][j] = EQAry[zeroFramedAry[i][j]];
+				}
+			}
+		}
 	}
 	
 	public int getCase(int a, int b, int c, int d, int e) {
@@ -252,37 +262,42 @@ public int getCaseForPass2(int a, int b, int c, int d, int e) {
 	public void updateEQAry(int minNum) {
 		EQAry[newLabel] = minNum;
 	}
-	public void setNghbrsToMinNum(int rowIndex, int colIndex) {
-		int min = getMinInNghbrArr();
-		zeroFramedAry[rowIndex - 1][colIndex - 1] = min;
-		zeroFramedAry[rowIndex - 1][colIndex]     = min;
-		zeroFramedAry[rowIndex - 1][colIndex + 1] = min;
-		zeroFramedAry[rowIndex][colIndex - 1]     = min;
-		//zeroFramedAry[rowIndex][colIndex] = min;
-		
-	}
-	
-	public void prettyPrint(String outputFile) {
 
-		try {
-		    int pixel_value;
-			PrintWriter  printToFile = new PrintWriter(new File(outputFile));
-			//read in the input file
-			for(int i = 0; i < numRows; i++) {
-				for(int j = 0; j < numCols; j++) {
-					pixel_value = zeroFramedAry[i][j];
-					if(pixel_value > 0) 
-						printToFile.println(pixel_value + " ");
-					else 
-						printToFile.print(" ");
-				}
+	
+	public void prettyPrint(PrintWriter printToFile,int num) {
+		
+		printToFile.print("Eight Connected Components Pass " + num );
+		int pixel_value;
+		//PrintWriter  printToFile = new PrintWriter(new File(outputFile));
+		//read in the input file
+		for(int i = 0; i < numRows; i++) {
+			for(int j = 0; j < numCols; j++) {
+				pixel_value = zeroFramedAry[i][j];
+				if(pixel_value > 0) 
+					printToFile.print(pixel_value + " ");
+				else 
+					printToFile.print(" ");
+			}
 				printToFile.println();
-			}		
-			printToFile.close();
-		}catch(IOException exc) {
-			System.out.println(exc);
 		}
+		printToFile.println();
+		printEQ(printToFile, num);
+		printToFile.println();
+			
 	}//prettyPrint method
+	
+	public void manageEQAry() {
+		int trueLabel = 0, index = 1;
+		while(index < newLabel) {
+			if(EQAry[index] == index) {
+				trueLabel++;
+				EQAry[index++] = trueLabel;
+			}
+			else {
+				EQAry[index++] = EQAry[EQAry[index]];
+			}
+		}
+	}
 	
 	public void printFunc(String outputFile) {
 		try {
@@ -298,6 +313,13 @@ public int getCaseForPass2(int a, int b, int c, int d, int e) {
 		} catch(IOException exc) {
 			System.out.println(exc);
 		}
+	}
+	
+	public void printEQ(PrintWriter printToFile, int num) {
+		printToFile.println("EQAry for pass " + num);
+		for(int i = 0; i <= newLabel; ++i)
+			printToFile.print(EQAry[i] + "  ");
+		printToFile.println();
 	}
 
 }
