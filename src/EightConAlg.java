@@ -88,7 +88,6 @@ public class EightConAlg {
 					int e = NeighborAry[index++];
 					
 					int currentCase = getCase(a,b,c,d,e);
-					System.out.println("Case # " + currentCase);
 					if(currentCase == 1) {
 						newLabel++;
 						zeroFramedAry[rowVal][colVal] = newLabel;
@@ -96,13 +95,10 @@ public class EightConAlg {
 					else if(currentCase == 2) {
 						int nghbrLabel = getLabel(a,b,c,d);
 						zeroFramedAry[rowVal][colVal] = nghbrLabel;
-						System.out.println("===>" + nghbrLabel);
 					}
 					else if(currentCase == 3) {
 						int minNghbr = getMinInNghbrArr();
 						zeroFramedAry[rowVal][colVal] = minNghbr;
-						System.out.print(minNghbr + "\n");
-						System.out.println("=====================");
 						updateEQAry(minNghbr);
 					}
 				}
@@ -111,39 +107,56 @@ public class EightConAlg {
 	}
 	
 	public void EightConCC_Pass2() {
-		
+		int pixel_val = -1;
 		for(int rowVal = numRows - 1; rowVal >=1; --rowVal) {
 			for(int colVal = numCols - 1; colVal >= 1; --colVal) {
-				int index = 0;
-				NeighborAry[index] = zeroFramedAry[rowVal + 1][colVal - 1];
-				int a = NeighborAry[index++];
-				NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal];
-				int b = NeighborAry[index++];
-				NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal + 1];
-				int c = NeighborAry[index++];
-				NeighborAry[index] = zeroFramedAry[rowVal][colVal - 1];
-				int d = NeighborAry[index++];
-				NeighborAry[index] = zeroFramedAry[rowVal][colVal];
-				int e = NeighborAry[index++];
-			
-				int currentCase = getCase(a,b,c,d,e);
-				if(currentCase == 1)
-					newLabel++;
-				else if(currentCase == 2) {}
-				else if(currentCase == 3) {}
+				pixel_val = zeroFramedAry[rowVal][colVal];
+				if(pixel_val > 0) {
+					int index = 0;
+					NeighborAry[index] = zeroFramedAry[rowVal + 1][colVal - 1];
+					int a = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal + 1][colVal];
+					int b = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal + 1][colVal + 1];
+					int c = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal][colVal + 1];
+					int d = NeighborAry[index++];
+					NeighborAry[index] = zeroFramedAry[rowVal][colVal];
+					int e = NeighborAry[index++];
+				
+					int currentCase = getCaseForPass2(a,b,c,d,e);
+					System.out.println("Current Case# " + currentCase);
+					if(currentCase == 1) 
+					    { 
+						//do nothing 
+						}
+					
+					else if(currentCase == 2) 
+					{
+						//do nothing
+					}
+					else if(currentCase == 3) 
+					{
+						int minNghbr = getMinInNghbrArr();
+						System.out.println(minNghbr);
+						System.out.println("===================>");
+						zeroFramedAry[rowVal][colVal] = minNghbr;
+						updateEQAry(minNghbr);
+						
+					}
+				}
 			}
 		}	
 	}
 	
 	public int getCase(int a, int b, int c, int d, int e) {
 		
-		System.out.print(a + " " + b + " " + c + " " + "\n");
-		System.out.print(d + " " + e + "\n");
+		//System.out.print(a + " " + b + " " + c + " " + "\n");
+		//System.out.print(d + " " + e + "\n");
 	
 		if(a == 0 && b == 0 && c == 0 && d == 0)
 			return 1;
-		 
-		 else if(a > 0 && b > 0 && c > 0 && d > 0 &&
+		else if(a > 0 && b > 0 && c > 0 && d > 0 &&
 				 a == b && b == c && c == d          ||
 				 a > 0 && b > 0 && c > 0 && d == 0 && 
 			     a == b && b == c                    ||
@@ -169,6 +182,46 @@ public class EightConAlg {
 			     a == 0 && b > 0 && c == 0 && d == 0 ||
 			     a == 0 && b == 0 && c > 0 && d == 0 ||
 			     a == 0 && b == 0 && c == 0 && d > 0   ) 
+		  
+			 return 2;	 
+		 else
+			 return 3;
+	}
+	
+public int getCaseForPass2(int a, int b, int c, int d, int e) {
+		
+		System.out.print(a + " " + b + " " + c + " " + "\n");
+		System.out.print(d + " " + e + "\n");
+	
+		if(a == 0 && b == 0 && c == 0 && d == 0)
+			return 1;
+		else if(a > 0 && b > 0 && c > 0 && d > 0 && e > 0 &&
+				 a == b && b == c && c == d && d == e          ||
+				 a > 0 && b > 0 && c > 0 && d == 0 && 
+			     a == b && b == c && c == e                    ||
+			     a > 0 && b > 0 && c == 0 && d > 0 && 
+			     a == b && b == d && d == e                    ||
+			     a > 0 && b == 0 && c > 0 && d > 0 &&
+			     a == c && c == d && d == e                    ||
+			     a == 0 && b > 0 && c > 0 && d > 0 &&
+			     b == c && c == d && d == e                    ||
+			     a > 0 && b > 0 && c == 0 && d == 0 &&
+			     a == b && b == e                              ||
+			     a > 0 && b == 0 && c > 0 && d == 0 &&
+			     a == c && c == e                              ||
+			     a > 0 && b == 0 && c == 0 && d > 0 &&
+			     a == d && d == e                              ||
+			     a == 0 && b > 0 && c == 0 && d > 0 &&
+			     b == d  && d == e                             ||
+			     a == 0 && b == 0 && c > 0 && d > 0 &&
+			     c == d  && d == e                             ||
+			     a == 0 && b > 0 && c > 0 && d == 0 &&
+			     b == c && c == e                              ||
+			     a > 0 && b == 0 && c == 0 && d == 0 && a == e ||
+			     a == 0 && b > 0 && c == 0 && d == 0 && b == e ||
+			     a == 0 && b == 0 && c > 0 && d == 0 || c == e ||
+			     a == 0 && b == 0 && c == 0 && d > 0  && d == e  )
+		 
 			 return 2;	 
 		 else
 			 return 3;
