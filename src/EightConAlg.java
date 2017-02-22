@@ -115,7 +115,7 @@ public class EightConAlg {
 		for(int rowVal = numRows - 1; rowVal >=1; --rowVal) {
 			for(int colVal = numCols - 1; colVal >= 1; --colVal) {
 				int index = 0;
-				NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal - 1];
+				NeighborAry[index] = zeroFramedAry[rowVal + 1][colVal - 1];
 				int a = NeighborAry[index++];
 				NeighborAry[index] = zeroFramedAry[rowVal - 1][colVal];
 				int b = NeighborAry[index++];
@@ -208,6 +208,28 @@ public class EightConAlg {
 		//zeroFramedAry[rowIndex][colIndex] = min;
 		
 	}
+	
+	public void prettyPrint(String outputFile) {
+
+		try {
+		    int pixel_value;
+			PrintWriter  printToFile = new PrintWriter(new File(outputFile));
+			//read in the input file
+			for(int i = 0; i < numRows; i++) {
+				for(int j = 0; j < numCols; j++) {
+					pixel_value = zeroFramedAry[i][j];
+					if(pixel_value > 0) 
+						printToFile.println(pixel_value + " ");
+					else 
+						printToFile.print(" ");
+				}
+				printToFile.println();
+			}		
+			printToFile.close();
+		}catch(IOException exc) {
+			System.out.println(exc);
+		}
+	}//prettyPrint method
 	
 	public void printFunc(String outputFile) {
 		try {
